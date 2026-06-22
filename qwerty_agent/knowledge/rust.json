@@ -1,0 +1,41 @@
+{
+  "rust_basics": {
+    "no_std development": "Use #![no_std] at crate root. No standard library available. Use core:: instead of std:: for basics (core::str, core::fmt, core::cell, core::arch). Use alloc crate for heap allocation: extern crate alloc; use alloc::vec::Vec; use alloc::string::String;",
+    "no_main in firmware": "Use #![no_main] to prevent Rust from expecting a standard main function. Define custom entry point via #[entry] attribute from the uefi crate. Signature: fn main() -> Status { ... }.",
+    "panic = abort": "In Cargo.toml: [profile.dev] panic = \"abort\" and [profile.release] panic = \"abort\". This prevents unwind table generation, reducing binary size and fixing linker errors in no_std.",
+    "UnsafeCell pattern": "Used for interior mutability in static variables. Wrap your type: pub struct SafeType { inner: UnsafeCell<Type> }. unsafe impl Sync for SafeType {}. Methods access via unsafe { &mut *self.inner.get() } or unsafe { &*self.inner.get() }.",
+    "Global allocator": "Use #[global_allocator] static ALLOCATOR: AllocatorType = AllocatorType::new(). The uefi crate provides one with features = [\"alloc\", \"global_allocator\"]. For custom: implement GlobalAlloc trait.",
+    "Static initialization": "In no_std, statics must be const-initializable. Use const fn new() for constructors. Collections like Vec::new() are const. Wrap in Option and call init() at runtime if needed.",
+    "UEFI crate key types": "Status (return from entry), Handle (protocol handle), ScopedProtocol (safe protocol wrapper), SystemTable (access to all UEFI services), BootServices (memory, protocols, events), RuntimeServices (time, vars, reset)."
+  },
+
+  "rust_compiler_errors": {
+    "E0432: unresolved import": "The imported item doesn't exist. Check the path: use uefi::proto::media::fs::SimpleFileSystem (not uefi::proto::console::file::SimpleFileSystem). Check crate version features.",
+    "E0308: mismatched types": "Expected type A, got type B. Common in no_std when using std types instead of core types. Use core::slice::from_raw_parts instead of std::slice::from_raw_parts.",
+    "E0133: use of unsafe block": "Operation requires unsafe {}. Dereferencing raw pointers, calling unsafe functions, accessing mutable statics all need unsafe blocks.",
+    "E0277: trait bounds not satisfied": "Type doesn't implement a required trait. E.g., writing to stdout needs write_str from core::fmt::Write. Add use core::fmt::Write; for write! macro.",
+    "E0463: can't find crate": "Dependency not in Cargo.toml or not downloaded. Run cargo fetch or cargo build. For target-specific crates, ensure --target is correct.",
+    "E0512: incompatible ABIs": "Mismatch between C ABI expectations. Common when mixing UEFI types with standard Rust types. Use repr(C) or repr(packed) on structs passed to firmware.",
+    "Warnings: unused variables": "Prefix unused variables with underscore: _var instead of var. Or use #[allow(unused_variables)] at function level.",
+    "Warnings: dead code": "Code never called. Use #[allow(dead_code)] or prefix with underscore. In OS dev, some functions are intentionally unreachable from user code."
+  },
+
+  "rust_unsafe_patterns": {
+    "Raw pointer dereference": "let ptr: *mut T = ...; unsafe { *ptr = value; }. Must ensure pointer is aligned, non-null, and points to valid memory. Prever wrap in safe API.",
+    "Volatile access": "In embedded/OS, use write_volatile and read_volatile to prevent compiler optimizations from removing hardware register accesses. Example: ptr.write_volatile(value) or ptr.read_volatile().",
+    "Inline assembly": "Use core::arch::asm! macro. Syntax: asm!(\"instructions\", out(\"reg\") out_val, in(\"reg\") in_val, options(nomem, nostack)). Common in PCI I/O (in/out instructions) and context switching.",
+    "Union types": "Use core::mem::MaybeUninit<T> for potentially uninitialized memory. .assume_init() to read as initialized. Must guarantee initialization before reading.",
+    "Transmute": "use core::mem::transmute. Only when types have same size. Extremely dangerous. Prever safer conversions like bytemuck crate or manual field-by-field copy."
+  },
+
+  "cargo_commands": {
+    "Build for UEFI": "cargo build --release --target x86_64-unknown-uefi",
+    "Build with warnings": "cargo build 2>&1 | head -30 (see only first 30 lines)",
+    "Check (fast)": "cargo check --target x86_64-unknown-uefi (no codegen, just typecheck)",
+    "Add target": "rustup target add x86_64-unknown-uefi",
+    "Update deps": "cargo update",
+    "Test (host)": "cargo test --target x86_64-unknown-uefi (limited, most tests need host target)",
+    "Binary size": "cargo size --target x86_64-unknown-uefi --release",
+    "List files": "ls -lh target/x86_64-unknown-uefi/release/*.efi"
+  }
+}

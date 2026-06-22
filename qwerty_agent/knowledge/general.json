@@ -1,0 +1,75 @@
+{
+  "technology": {
+    "Artificial Intelligence": "Machines performing tasks requiring human-like intelligence. Narrow AI (specific tasks: chess, translation) vs General AI (any task, hypothetical). Approaches: symbolic (rules), ML (data-driven), neural networks.",
+    "Machine Learning": "Algorithms that improve through experience. Supervised (labeled data: classification, regression), Unsupervised (unlabeled: clustering, dimensionality reduction), Reinforcement (rewards: games, robotics).",
+    "Neural Networks": "Inspired by brain neurons. Layers: input → hidden → output. Each neuron: weighted sum + activation function (ReLU, sigmoid). Deep learning: many hidden layers. Backpropagation: learn via gradient descent.",
+    "Cloud Computing": "On-demand computing resources over internet. IaaS (VMs, storage: AWS EC2/S3), PaaS (platform: Heroku), SaaS (apps: Gmail). Three big providers: AWS, Azure, GCP. Serverless: pay per execution.",
+    "Cybersecurity": "Protecting systems from attacks. Common threats: phishing (deceptive emails), malware (viruses, ransomware), DDoS (overwhelm servers), SQL injection, XSS, MITM. Defense: patching, firewalls, encryption, MFA.",
+    "Blockchain": "Distributed, immutable ledger. Blocks linked via cryptographic hashes. Consensus (mining/PoS) validates new blocks. Use cases: cryptocurrency (Bitcoin, Ethereum), smart contracts, supply chain tracking.",
+    "Containerization": "Package app + dependencies into isolated container. Docker: most popular container runtime. Kubernetes: orchestration (deploy, scale, manage). Lighter than VMs (share host OS kernel).",
+    "Open Source": "Software with source code freely available for use, modification, distribution. Licenses: MIT (permissive), GPL (copyleft: derivative must be open), Apache 2.0 (permissive + patent protection)."
+  },
+  "history": {
+    "Industrial Revolution": "1760-1840. Steam engine (Watt), textile machinery, iron production. Shift from manual to machine manufacturing. Led to urbanization, capitalism, modern working class. Second revolution: electricity, assembly line.",
+    "World War I": "1914-1918. Trigger: assassination of Archduke Ferdinand. Trench warfare, new weapons (machine guns, tanks, chemical gas, aircraft). 16 million deaths. Result: collapse of empires, League of Nations.",
+    "World War II": "1939-1945. Axis (Germany, Japan, Italy) vs Allies (US, UK, USSR, China). Holocaust (6 million Jews killed). Atomic bombs (Hiroshima, Nagasaki). 70-85 million deaths. Result: UN, Cold War, decolonization.",
+    "Cold War": "1947-1991. US vs USSR ideological conflict. Nuclear arms race (MAD: mutually assured destruction). Proxy wars (Korea, Vietnam, Afghanistan). Space Race (Sputnik, Apollo 11 moon landing 1969). Fall of Berlin Wall 1989.",
+    "Internet History": "ARPANET 1969 (4 nodes). TCP/IP 1983. World Wide Web: Tim Berners-Lee 1989 (HTML, HTTP, URLs). Mosaic browser 1993. Google 1998, Wikipedia 2001, Facebook 2004, iPhone 2007.",
+    "Space Race": "1957-1975. USSR: Sputnik (first satellite), Vostok (first human: Yuri Gagarin). US: Apollo program (first moon landing: Neil Armstrong 1969). Motivated by Cold War competition.",
+    "Ancient Civilizations": "Mesopotamia (writing, law code), Egypt (pyramids, hieroglyphs), Indus Valley (urban planning, plumbing), China (silk, paper, gunpowder), Greece (democracy, philosophy), Rome (law, engineering, republic)."
+  },
+  "geography": {
+    "Continents": "7: Africa (largest desert: Sahara), Antarctica (coldest, driest), Asia (largest, Mt Everest), Europe (smallest continent after Australia), North America, South America (Amazon rainforest), Australia (island continent).",
+    "Oceans": "5: Pacific (largest, deepest: Mariana Trench), Atlantic (second largest), Indian (warmest), Southern (Antarctic), Arctic (smallest, mostly frozen). Ocean currents regulate global climate.",
+    "Climate Zones": "Tropical (near equator, hot+wet), Arid (deserts, little rain), Temperate (moderate, four seasons), Continental (extreme temps, inland), Polar (cold, ice caps). Koppen classification system.",
+    "Natural Resources": "Renewable: solar, wind, hydro, geothermal, biomass. Non-renewable: fossil fuels (coal, oil, natural gas), minerals (iron, copper, lithium, rare earth), nuclear (uranium). Peak oil: maximum extraction rate.",
+    "Population": "World: ~8 billion. Most populous: India (1.4B), China (1.4B), US (335M). Most dense: Monaco, Singapore, Hong Kong. Urbanization: 55% live in cities (growing)."
+  },
+  "philosophy": {
+    "Logic": "Study of valid reasoning. Deductive (general→specific: all men are mortal, Socrates is a man → Socrates is mortal). Inductive (specific→general: observed swans are white → all swans are white, uncertain).",
+    "Ethics": "Study of right/wrong. Normative ethics: what should we do? Deontology (duty: Kant's categorical imperative), Consequentialism (outcomes: utilitarianism = greatest good for greatest number), Virtue ethics (character: Aristotle).",
+    "Epistemology": "Study of knowledge. What can we know? Rationalism (reason, Descartes: 'I think therefore I am'), Empiricism (experience, Hume: all knowledge from senses), Skepticism (we can't be certain).",
+    "Metaphysics": "Study of reality. What exists? Materialism (only physical), Idealism (mind is fundamental), Dualism (mind and body separate: Descartes), Free will vs determinism. Nature of time, causality, identity.",
+    "Existentialism": "Individual exists first, defines own meaning. Key figures: Kierkegaard, Nietzsche, Sartre, Camus. Themes: freedom, choice, absurdity (meaningless universe), authenticity (being true to self).",
+    "Political Philosophy": "How should society be governed? Plato's Republic (philosopher-kings), Hobbes (social contract: give up freedom for security), Locke (natural rights: life, liberty, property), Marx (class struggle, communism)."
+  },
+  "economics": {
+    "Supply and Demand": "Price determined by supply (quantity producers offer) and demand (quantity consumers want). Equilibrium: supply = demand. Shortage (demand > supply): prices rise. Surplus (supply > demand): prices fall.",
+    "Inflation": "General increase in prices over time. Causes: demand-pull (too much money chasing too few goods), cost-push (production costs rise), monetary (money supply increases). Measured by CPI (consumer price index).",
+    "GDP": "Gross Domestic Product: total value of goods/services produced in a country. C + I + G + NX (Consumption + Investment + Government + Net Exports). Real GDP adjusts for inflation. Per capita: GDP/population.",
+    "Market Types": "Perfect competition (many small firms, identical products), Monopoly (one firm, no substitutes), Oligopoly (few large firms), Monopolistic competition (many firms, differentiated products).",
+    "Cryptocurrency": "Decentralized digital currency. Bitcoin (2009): proof-of-work, fixed supply 21M. Ethereum: smart contracts, proof-of-stake. Volatile, speculative. Used for: transfer of value, DeFi, NFTs.",
+    "Stock Market": "Market for buying/selling company shares. Primary: IPO (company issues shares). Secondary: trading between investors. Indices: S&P 500 (500 large US), Dow Jones (30 blue-chip), NASDAQ (tech-heavy).",
+    "Interest Rates": "Cost of borrowing money. Central banks (Fed, ECB) set benchmark rates. Low rates → stimulate economy (cheaper borrowing). High rates → fight inflation (more expensive borrowing). Affects everything: mortgages, bonds, stocks."
+  },
+  "health": {
+    "Human Nutrition": "Macronutrients: carbohydrates (energy: 4 cal/g), proteins (building blocks: 4 cal/g), fats (energy storage: 9 cal/g). Micronutrients: vitamins (organic: C, D, B12), minerals (inorganic: iron, calcium, zinc).",
+    "Exercise": "Types: aerobic (cardio: running, swimming — improves heart/lungs), anaerobic (weights, sprinting — builds muscle), flexibility (stretching, yoga). WHO recommends 150min moderate or 75min vigorous per week.",
+    "Sleep": "Essential for memory consolidation, immune function, cellular repair. Stages: NREM (light, deep) and REM (dreaming). Adults need 7-9 hours. Sleep deprivation impairs cognition, weakens immune system.",
+    "Common Diseases": "Cardiovascular (heart disease, stroke — #1 killer globally), Diabetes (type 1: autoimmune, type 2: insulin resistance — linked to obesity), Cancer (uncontrolled cell growth), Infectious (COVID-19, influenza, HIV, malaria).",
+    "Vaccines": "Train immune system to recognize pathogens. Types: mRNA (COVID: Moderna, Pfizer), viral vector (J&J, AstraZeneca), inactivated (polio, flu), live attenuated (MMR, chickenpox). Herd immunity when enough vaccinated.",
+    "Mental Health": "Common conditions: depression (persistent sadness, loss of interest), anxiety (excessive worry), PTSD (trauma response), bipolar (mood swings), schizophrenia (psychosis). Treatment: therapy (CBT), medication, lifestyle changes."
+  },
+  "internet": {
+    "Web Browsers": "Programs that render web pages. Major: Chrome/Chromium (Blink engine), Firefox (Gecko), Safari (WebKit). Features: tabs, extensions, dev tools. Private browsing doesn't save history. Cookies store site data.",
+    "Search Engines": "Index web pages for retrieval. Google (~90% market share), Bing, DuckDuckGo (privacy-focused). Crawling: bots follow links to discover pages. Indexing: storing page content. Ranking: relevance algorithms (PageRank).",
+    "Social Media": "Platforms for user-generated content and social interaction. Major: Facebook (Meta), Instagram (photo), Twitter/X (microblogging), YouTube (video), Reddit (communities), LinkedIn (professional), TikTok (short video).",
+    "Email": "Electronic mail. Protocols: SMTP (send), IMAP (receive, server keeps messages), POP3 (receive, download+delete). Headers: From, To, Subject, Date. Attachments: MIME encoding. Spam filters block unwanted mail.",
+    "Cloud Storage": "Files stored on remote servers accessed via internet. Major: Google Drive, Dropbox, iCloud, OneDrive. Sync: changes propagate across devices. Sharing: links with permissions. Version history: recover old versions.",
+    "Internet Protocols": "Foundation: TCP/IP (packet switching). Application: HTTP (web), SMTP (email), FTP (file transfer), DNS (name resolution), DHCP (IP assignment), TLS/SSL (encryption). Port numbers identify services."
+  },
+  "general_knowledge": {
+    "What the internet is": "Global network of interconnected computers communicating via TCP/IP protocols. Decentralized (no single owner). Billions of devices connected. Enables web, email, streaming, gaming, communication.",
+    "What a computer is": "Electronic device that processes data under program control. Hardware: CPU, RAM, storage, input/output. Software: OS (manages hardware), applications (user tasks). Four functions: input, process, output, store.",
+    "What electricity is": "Flow of electrons through a conductor. Current (I: amperes) = flow rate. Voltage (V: volts) = potential difference. Resistance (R: ohms) = opposition to flow. Ohm's law: V = IR.",
+    "What time is": "Fundamental dimension (4th dimension after 3D space). Measured via periodic phenomena (atomic clocks: cesium-133 oscillations). Relativity: time is relative (dependent on gravity and velocity). Direction: entropy always increases (arrow of time).",
+    "What consciousness is": "Subjective experience of being. Hard problem: why is there something it's like to be you? Theories: materialism (emergent from brain processes), dualism (non-physical), panpsychism (consciousness fundamental). Not yet scientifically explained.",
+    "What life is": "Characteristics: organization (cells), metabolism (energy use), growth, adaptation, response to stimuli, reproduction. Origin: abiogenesis (non-living → living, ~3.5 billion years ago). Definition debated (viruses? prions?).",
+    "What money is": "Medium of exchange, store of value, unit of account. Types: commodity (gold, silver), fiat (government-issued, not backed by commodity), digital (cryptocurrency). Functions: facilitates trade beyond barter.",
+    "What language is": "System of symbols + rules for communication. Human language: infinite generativity (finite rules produce infinite sentences), displacement (talk about absent things), cultural transmission. 7000+ languages worldwide.",
+    "What music is": "Organized sound: melody (pitch sequence), harmony (simultaneous pitches), rhythm (time patterns), timbre (sound quality). Elements: notes, scales, chords, tempo, dynamics. Genres: classical, jazz, rock, pop, electronic, hip-hop.",
+    "What art is": "Human creative expression. Forms: visual (painting, sculpture), literary (poetry, novels), performing (theatre, dance), culinary, digital. Purpose: emotional expression, communication, beauty, commentary, decoration.",
+    "What love is": "Complex emotion/state. Types: romantic (passion + intimacy), familial (parent-child), platonic (friendship), agape (selfless, universal). Biological basis: oxytocin, dopamine, vasopressin. Subject of art, philosophy, science.",
+    "What happiness is": "Subjective well-being. Hedonic (pleasure, absence of pain) vs eudaimonic (meaning, fulfillment). Research: beyond ~$75k/year, more money ≠ more happiness. Factors: relationships, health, autonomy, purpose, gratitude."
+  }
+}

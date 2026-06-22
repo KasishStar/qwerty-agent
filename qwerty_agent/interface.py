@@ -13,7 +13,7 @@ import readline
 import glob as glob_module
 from datetime import datetime
 
-from agent import process, load_knowledge, recall
+from qwerty_agent.agent import process, load_knowledge, recall
 
 HISTORY_FILE = os.path.join(os.path.dirname(__file__), "memory", "history.json")
 HIST_FILE = os.path.join(os.path.dirname(__file__), "memory", ".qwerty_history")
@@ -40,14 +40,56 @@ class C:
 def w():
     return shutil.get_terminal_size().columns
 
+def box(text, color=C.CYN, width=None):
+    ww = width or w()
+    top = color + "╭" + "─" * (ww - 2) + "╮" + C.RST
+    bot = color + "╰" + "─" * (ww - 2) + "╯" + C.RST
+    lines = text.split("\n")
+    out = [top]
+    for line in lines:
+        visible = strip_ansi(line)
+        pad = ww - 2 - len(visible)
+        out.append(color + "│" + C.RST + " " + line + " " * pad + color + "│" + C.RST)
+    out.append(bot)
+    return "\n".join(out)
+
 def strip_ansi(s):
     import re
     return re.sub(r'\033\[[0-9;]*m', '', s)
+
+def trunc(s, n):
+    s = str(s)
+    return s[:n] + "…" if len(s) > n else s
+
+def wrap(text, width=None):
+    ww = width or w()
+    return "\n".join(textwrap.fill(line, width=ww - 4) for line in text.split("\n"))
 
 def fmt_time(dt=None):
     if dt is None:
         dt = datetime.now()
     return dt.strftime("%H:%M")
+
+# ─── Status Bar ────────────────────────────────────────────────
+def status_bar():
+    ww = w()
+    kw = load_knowledge()
+    entry_count = sum(
+        len(v) if isinstance(v, dict) else 0
+        for v in kw.values()
+    )
+    label = f" ◈ QWERTY v2  ·  {entry_count} entries  ·  /help "
+    sep = C.DIM + "─" * (ww - len(strip_ansi(label))) + C.RST
+    return C.CYN + label + sep + C.RST
+
+def divider(label=None, color=C.DIM):
+    ww = w()
+    if label:
+        text = " " + label + " "
+        vis = strip_ansi(text)
+        side = (ww - len(vis)) // 2 - 1
+        return color + "─" * side + text + "─" * side + C.RST
+    return color + "─" * ww + C.RST
 
 # ─── Load / Save History ──────────────────────────────────────
 def load_history():
@@ -113,6 +155,9 @@ def print_agent(text, tooltips=None):
 
 def print_error(text):
     print(C.RED + "  ✗ " + str(text) + C.RST)
+
+def print_success(text):
+    print(C.GRN + "  ✓ " + str(text) + C.RST)
 
 def print_info(text):
     print(C.YLW + "  ℹ " + str(text) + C.RST)
@@ -190,7 +235,7 @@ def handle_slash(cmd, args, history):
         if not args:
             print_info("Usage: /web <query>")
             return True
-        from agent import tool_web_search
+        from qwerty_agent.agent import tool_web_search
         print_info("Searching the web...")
         result = tool_web_search(args)
         print_agent(result, ["web"])
@@ -212,7 +257,7 @@ def handle_slash(cmd, args, history):
         if not args:
             print_info("Usage: /run <command>")
             return True
-        from agent import tool_run_command
+        from qwerty_agent.agent import tool_run_command
         print_info("Running...")
         result = tool_run_command(args)
         print_agent(result, ["shell"])
@@ -222,7 +267,7 @@ def handle_slash(cmd, args, history):
         if not args:
             print_info("Usage: /read <path>")
             return True
-        from agent import tool_read_file
+        from qwerty_agent.agent import tool_read_file
         result = tool_read_file(args)
         print_agent(result, ["file"])
         return True
@@ -231,7 +276,7 @@ def handle_slash(cmd, args, history):
         if not args:
             print_info("Usage: /write <path>")
             return True
-        from agent import tool_write_file
+        from qwerty_agent.agent import tool_write_file
         print_info("Enter content (Ctrl+D or '.' on its own line to finish):")
         lines = []
         while True:
@@ -251,7 +296,7 @@ def handle_slash(cmd, args, history):
         if not args:
             print_info("Usage: /search <pattern>")
             return True
-        from agent import tool_search_files
+        from qwerty_agent.agent import tool_search_files
         print_info("Searching...")
         result = tool_search_files(args, ".")
         print_agent(result, ["search"])
@@ -261,7 +306,7 @@ def handle_slash(cmd, args, history):
         if not args:
             print_info("Usage: /find <pattern>")
             return True
-        from agent import tool_find_files
+        from qwerty_agent.agent import tool_find_files
         print_info("Finding...")
         result = tool_find_files(args, ".")
         print_agent(result, ["find"])
@@ -340,6 +385,7 @@ def main():
 
         readline.write_history_file(HIST_FILE)
 
+        # Slash commands
         if text.startswith("/"):
             parts = text[1:].split(maxsplit=1)
             cmd = parts[0].lower()
@@ -348,6 +394,7 @@ def main():
                 break
             continue
 
+        # Regular input
         ts = datetime.now().isoformat()
         history.append({"role": "user", "content": text[:200], "timestamp": ts})
         print_user(text)

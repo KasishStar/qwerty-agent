@@ -1,0 +1,75 @@
+{
+  "languages": {
+    "Python": "Interpreted, dynamically-typed, garbage-collected. Used for scripting, web (Django/Flask), data science (numpy/pandas), ML (PyTorch/TF). Famous for readability and 'batteries included' stdlib.",
+    "Rust": "Systems language with zero-cost abstractions, ownership model (no GC), memory safety without GC. Used for OS dev, WebAssembly, CLI tools. Compile-time guarantees prevent segfaults and data races.",
+    "C": "Procedural, manual memory management with malloc/free. Foundation of most OS kernels (Linux, Windows NT). Every byte is explicit. No built-in safety — programmer controls everything.",
+    "C++": "C with classes, templates, RAII, multiple paradigms. Used in game engines (Unreal), browsers (Chromium), databases. Backward-compatible with C but adds OOP, generics, exceptions.",
+    "JavaScript": "Dynamic, prototype-based, event-loop concurrency. Runs in every browser. Node.js enables server-side JS. TypeScript adds static types on top. Ecosystem: npm (largest package registry).",
+    "Go": "Statically-typed, compiled, GC'd with goroutines for concurrency. Simple syntax, fast compilation. Used for cloud infrastructure (Docker, Kubernetes), CLI tools, servers.",
+    "Java": "Statically-typed, JVM-based, class-oriented OOP. Write once run anywhere via bytecode. Used in enterprise (Spring), Android (Kotlin too), big data (Hadoop, Spark).",
+    "Zig": "Modern systems language like C but safer. No hidden control flow, no hidden allocations. comptime metaprogramming. Cross-compilation as a first-class feature.",
+    "Lua": "Lightweight embeddable scripting language. Used in game modding (WoW, Roblox), config files (Neovim, Awesome WM). Fast, small (~200KB), C API for embedding.",
+    "Bash": "Unix shell and scripting language. Glue code: pipes, redirects, command substitution. Essential for CI/CD, devops, automation. Arrays and basic control flow.",
+    "SQL": "Declarative query language for relational databases. CRUD operations: SELECT, INSERT, UPDATE, DELETE. JOINs for relations. Aggregate functions: COUNT, SUM, AVG, GROUP BY."
+  },
+  "paradigms": {
+    "Object-Oriented Programming": "Organize code into objects (state + behavior). Pillars: encapsulation (hide internal state), inheritance (reuse via parent classes), polymorphism (same interface, different implementations).",
+    "Functional Programming": "Pure functions with no side effects. Immutable data, higher-order functions (map, filter, reduce), recursion, lazy evaluation. Languages: Haskell, Clojure, Elixir.",
+    "Procedural Programming": "Sequential steps with procedure/function calls. State is mutable and global/shared. C is the classic procedural language. Most intuitive for beginners.",
+    "Declarative Programming": "Describe WHAT you want, not HOW. SQL, HTML, CSS, regular expressions are declarative. The system figures out the execution plan.",
+    "Generic Programming": "Write algorithms once, parameterized by types. C++ templates, Rust generics, Java generics. Enables type-safe reusable code without runtime overhead.",
+    "Concurrent Programming": "Multiple computations making progress (interleaved or parallel). Threads, async/await, goroutines, actors. Challenges: race conditions, deadlocks, consistency."
+  },
+  "data_structures": {
+    "Array": "Contiguous memory, O(1) index access, O(n) insert/delete. Fixed or dynamic size. Cache-friendly (sequential memory access).",
+    "Linked List": "Nodes with pointers to next (singly) or prev+next (doubly). O(1) insert/delete at known position, O(n) random access. No cache locality.",
+    "Hash Table": "Key-value store with O(1) average lookup. Hash function maps keys to buckets. Collisions resolved by chaining or open addressing. Basis for dictionaries/maps.",
+    "Binary Tree": "Each node has 0-2 children. Binary Search Tree: left < parent < right. O(log n) search/insert/delete if balanced. Self-balancing: AVL, Red-Black trees.",
+    "Heap": "Complete binary tree where parent >= children (max-heap) or parent <= children (min-heap). O(log n) push/pop, O(1) peek. Used for priority queues.",
+    "Graph": "Nodes (vertices) connected by edges. Directed/undirected, weighted/unweighted. Represented as adjacency matrix (dense) or adjacency list (sparse). BFS/DFS for traversal.",
+    "Stack": "LIFO (last-in-first-out). push/pop O(1). Used for function calls (call stack), expression evaluation, undo operations.",
+    "Queue": "FIFO (first-in-first-out). enqueue/dequeue O(1). Used for BFS, task scheduling, buffering."
+  },
+  "algorithms": {
+    "Sorting": "Comparison-based: QuickSort (O(n log n) avg, O(n^2) worst), MergeSort (O(n log n) stable), HeapSort (O(n log n) in-place). Non-comparison: CountingSort, RadixSort (O(n+k)).",
+    "Binary Search": "O(log n) search on sorted array. Divide and conquer: check midpoint, discard half. Requires random access (array).",
+    "Depth-First Search": "Explore as deep as possible before backtracking. O(V+E). Recursive or stack-based. Used for: topological sort, cycle detection, pathfinding.",
+    "Breadth-First Search": "Explore all nodes at current depth before going deeper. O(V+E). Queue-based. Used for: shortest path (unweighted), web crawling, social networks.",
+    "Dijkstra's Algorithm": "Shortest path in weighted graph with non-negative edges. O((V+E) log V) with priority queue. Greedy: always pick closest unvisited node.",
+    "Dynamic Programming": "Solve subproblems once, reuse results. Top-down (memoization) or bottom-up (tabulation). Used for: Fibonacci, knapsack, edit distance, LCS.",
+    "Greedy Algorithms": "Make locally optimal choice at each step. Works when local optima lead to global optimum. Examples: Huffman coding, coin change (canonical), Kruskal's MST.",
+    "Recursion": "Function calls itself on smaller subproblem. Must have base case (termination) and recursive case (progress toward base). Stack depth limit exists."
+  },
+  "design_patterns": {
+    "Singleton": "Class with only one instance globally. Used for logging, configuration, thread pools. Criticized for hiding dependencies and making testing hard.",
+    "Factory": "Create objects without specifying exact class. Factory Method: one method for creation. Abstract Factory: family of related objects. Decouples client from concrete types.",
+    "Observer": "Subject notifies observers of state changes. Used in event systems, MVC (model notifies views). Pub/sub is a related pattern with message broker.",
+    "Strategy": "Define family of algorithms, make them interchangeable. Client selects strategy at runtime. Used for: sorting algorithms, compression, validation.",
+    "Builder": "Construct complex objects step by step. Separates construction from representation. Common for: SQL query builders, UI component construction.",
+    "Iterator": "Provide sequential access to elements without exposing underlying representation. Implemented via for-each loops, generators. Works with any collection type.",
+    "Dependency Injection": "Pass dependencies from outside rather than creating them internally. Improves testability (mock dependencies). Constructor injection most common.",
+    "MVC": "Model (data) — View (UI) — Controller (logic). Separation of concerns. Web frameworks: Django (MTV), Rails, Spring MVC. Variations: MVP, MVVM."
+  },
+  "common_errors": {
+    "Null Pointer Exception": "Accessing method/property on null reference. Fix: check for null before access, use Option/Optional types, null object pattern.",
+    "Memory Leak": "Allocated memory never freed. In GC languages: forgotten references keep objects alive. In manual: missing free(). Tools: Valgrind, AddressSanitizer.",
+    "Stack Overflow": "Recursion without base case, or excessive stack allocation. Fix: increase stack size, convert to iteration, use tail recursion optimization.",
+    "Off-by-One Error": "Using <= instead of < (or vice versa) in loop condition. Fix: careful boundary checking, use for-each when possible.",
+    "Race Condition": "Two threads access shared data without synchronization. Fix: mutex/lock, atomic operations, message passing, use thread-safe data structures.",
+    "Deadlock": "Two threads hold locks the other needs. Four conditions: mutual exclusion, hold-and-wait, no preemption, circular wait. Fix: lock ordering, timeout, try_lock.",
+    "Buffer Overflow": "Writing beyond allocated buffer bounds. Classic C vulnerability. Fix: bounds checking, use safe functions (strncpy vs strcpy), Rust's safe slices.",
+    "Type Error": "Operating on incompatible types. Dynamic languages: runtime TypeError. Static: compile-time error. Fix: type checking, type hints, validation."
+  },
+  "networking": {
+    "TCP": "Connection-oriented, reliable, ordered byte stream. Three-way handshake (SYN, SYN-ACK, ACK). Flow control (sliding window), congestion control (AIMD). Used by HTTP, SSH, SMTP.",
+    "UDP": "Connectionless, unreliable, no ordering. Low overhead, no retransmission. Used by DNS, DHCP, VoIP, video streaming, gaming. Application handles reliability if needed.",
+    "HTTP": "Application protocol for web. Methods: GET (read), POST (create), PUT (replace), PATCH (update), DELETE. Status codes: 1xx info, 2xx success, 3xx redirect, 4xx client error, 5xx server error.",
+    "HTTP/2": "Binary protocol (vs HTTP/1.1 text), multiplexed streams over single TCP connection, header compression (HPACK), server push. Major performance improvement over HTTP/1.1.",
+    "HTTPS": "HTTP over TLS. Encryption, authentication (certificates), integrity. Port 443. Let's Encrypt provides free certs. HSTS enforces HTTPS. Certificate Authorities verify identity.",
+    "DNS": "Domain Name System: translates domain names to IPs. Hierarchical: root → TLD (.com) → authoritative. Records: A (IPv4), AAAA (IPv6), CNAME (alias), MX (mail), TXT (metadata).",
+    "WebSocket": "Full-duplex persistent connection over TCP. Initiated as HTTP upgrade. Used for real-time apps: chat, live feeds, gaming, collaborative editing.",
+    "gRPC": "High-performance RPC using Protocol Buffers. HTTP/2 transport, bi-directional streaming. Generated client/server code. Used in microservices for low-latency communication.",
+    "REST": "Representational State Transfer. Stateless, resource-oriented (URLs), uses HTTP methods. Not a protocol but an architectural style. HATEOAS: discoverability via links.",
+    "GraphQL": "Query language for APIs. Client specifies exactly what data it needs. Single endpoint, introspective schema. Avoids over-fetching and under-fetching. Popular for complex frontends."
+  }
+}

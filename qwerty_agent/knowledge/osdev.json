@@ -1,0 +1,71 @@
+{
+  "uefi_boot": {
+    "UEFI boot process": "UEFI firmware loads BOOTX64.EFI from EFI/BOOT/ on a FAT32 partition. Entry point is 'efi_main' or '#[entry]' in Rust. The firmware provides system table, boot services, and runtime services via handles.",
+    "Setting up a UEFI project in Rust": "Create a new project: cargo new --edition 2024. Add uefi = { version = \"0.35\", features = [\"alloc\", \"global_allocator\"] } to Cargo.toml. Use #![no_std] #![no_main]. #[entry] fn main() -> Status { ... }. Build with cargo build --target x86_64-unknown-uefi.",
+    "UEFI memory map": "Use boot::memory_map(MemoryType::LOADER_DATA). Iterate entries: entry.page_count * 4096 for size. MemoryType::CONVENTIONAL is free RAM. MemoryType::LOADER_DATA is reclaimable after use.",
+    "UEFI protocols": "Protocols are accessed via boot::open_protocol_exclusive::<T>(handle). Common protocols: GraphicsOutput (framebuffer), SimpleFileSystem (disk), LoadedImage (process loading), Pointer (mouse), SerialIo (serial port).",
+    "UEFI file system": "Use boot::get_image_file_system(boot::image_handle()) to get SimpleFileSystem. Open root with open_directory(\"/\"). Open files with open_file(path, create, transient). Use File::read and File::write for I/O.",
+    "UEFI GOP (Graphics Output Protocol)": "Get GOP handle: boot::get_handle_for_protocol::<GraphicsOutput>(). Open: boot::open_protocol_exclusive::<GraphicsOutput>(handle). Get mode: gop.current_mode_info(). Frame buffer: gop.frame_buffer().as_mut_ptr() as *mut u32. Pixel format: mode_info.pixel_format().",
+    "Building a UEFI boot image": "Compile to .efi: cargo build --release --target x86_64-unknown-uefi. Create FAT image: dd if=/dev/zero of=image.img bs=1M count=64, mkfs.vfat image.img, mmd -i image.img ::/EFI/BOOT, mcopy -i image.img boot.efi ::/EFI/BOOT/BOOTX64.EFI. Run in QEMU: qemu-system-x86_64 -bios OVMF.fd -drive format=raw,file=image.img.",
+    "UEFI vs BIOS": "UEFI is the modern replacement for legacy BIOS. UEFI boots in 32-bit or 64-bit protected/long mode. BIOS boots in 16-bit real mode. UEFI provides protocol-based driver model. BIOS uses interrupt-based 0x13 for disk I/O."
+  },
+
+  "kernel_fundamentals": {
+    "What a kernel does": "A kernel manages hardware, memory, processes, and provides abstractions to user programs. Core responsibilities: memory management, process scheduling, interrupt handling, device drivers, IPC.",
+    "Monolithic vs Microkernel": "Monolithic: all drivers in kernel space (Linux). Faster but less stable. Microkernel: minimal kernel, drivers as user-space services (Minix, QNX). More stable but slower due to IPC overhead.",
+    "Kernel entry point": "The first code that runs after bootloader. Sets up stack, BSS, page tables, then calls kernel_main. Example: kernel::init() in kernel/mod.rs, called from main().",
+    "Panic handling": "In no_std, define a #[panic_handler] function. Usually halts the CPU in a loop to prevent undefined behavior. Can print messages to UEFI stdout before halting.",
+    "Global static state": "In kernel development, global state is common but unsafe. Wrap in UnsafeCell<T> and implement Sync manually. Use static mut or static with interior mutability. Example: pub static VFS: SafeVirtualFileSystem = SafeVirtualFileSystem::new();"
+  },
+
+  "memory_management": {
+    "Page frames": "Physical memory divided into 4KB pages. A page frame allocator tracks which frames are free/used. Simple implementation: bitmap or stack of free frame numbers.",
+    "Page tables": "x86_64 uses 4-level page tables: PML4 → PDPT → PD → PT → 4KB page. Each table has 512 entries. CR3 register holds the base address of PML4. Switching page tables = switching address space.",
+    "Heap allocator": "In no_std, implement alloc::alloc::GlobalAlloc trait. Methods: alloc(layout) and dealloc(ptr, layout). Simple bump allocator: increment a pointer. Better: buddy allocator or slab allocator.",
+    "UEFI memory allocation": "UEFI boot services provide allocate_pool() and free_pool(). After ExitBootServices, these are unavailable. Kernel must set up its own allocator before this point or use the uefi crate's global_allocator feature.",
+    "Memory map from UEFI": "See 'UEFI memory map'. Key for determining available RAM before setting up the kernel's own page frame allocator."
+  },
+
+  "process_management": {
+    "Process table": "A fixed-size array of Process structs. Each entry has PID, state, registers, stack pointer, memory context. Simple implementation: [Option<Process>; N].",
+    "Process states": "Ready (loaded, waiting for CPU), Running (currently executing), Sleeping (waiting for I/O/timer), Terminated (finished, waiting for cleanup).",
+    "Context switching": "Save current CPU registers (general purpose, stack pointer, page table base) to current process struct. Load saved registers of next process. In x86_64: use swapgs, push/pop registers, then iretq or lret to jump to new process.",
+    "Scheduling": "Round-robin is simplest: maintain a queue of ready processes, give each a time slice (e.g. 10ms). Timer interrupt triggers scheduler. More advanced: priority queues, multi-level feedback queue.",
+    "Process manager example": "A process manager can use a fixed-size table of Process structs with name, PID, state. Spawn creates entry, kill marks as empty."
+  },
+
+  "pci_devices": {
+    "PCI bus scanning": "Scan via port I/O: write to 0xCF8 (address), read from 0xCFC (data). Address format: bit 31 = enable, bits 23:16 = bus, 15:11 = slot, 10:8 = func, 7:0 = offset. Read vendor/device ID at offset 0. Class code at offset 0x08.",
+    "PCI driver matching": "Match drivers by class code: 0x03 = VGA/graphics, 0x02 = network, 0x01 = mass storage, 0x04 = audio, 0x0C = USB. Subclass refines: 0x0106 = SATA, 0x0108 = NVMe. Vendor ID refines further: 0x8086 = Intel, 0x10DE = NVIDIA.",
+    "PCI implementation example": "A PCI scanner can scan buses 0-7, slots 0-31, functions 0-7, storing up to 32 devices. Driver matching based on class/vendor ID."
+  },
+
+  "filesystems": {
+    "FAT32 structure": "MBR → Reserved sectors → FAT (File Allocation Table, 2 copies) → Root directory → Data region. Cluster is unit of allocation (typically 4KB = 8 sectors). Directory entries are 32 bytes with name, size, attributes, cluster pointer.",
+    "In-memory VFS": "A Virtual File System sits between kernel and physical FS driver. Presents uniform interface: open, read, write, close, list. Routes to appropriate physical FS driver (FAT, Ext2, etc.). Can use in-memory Vec<File> for early development.",
+    "VFS example": "A VirtualFileSystem can store files as Vec<File> with name (String) and data (Vec<u8>), with a thread-safe wrapper for static access.",
+    "Persistence strategy": "UEFI SimpleFileSystem protocol can read/write real files on FAT partition. Call boot::get_image_file_system(boot::image_handle()) to get protocol. Opens files on the same partition the boot image is loaded from."
+  },
+
+  "build_errors": {
+    "cargo build fails: target not found": "Run `rustup target add x86_64-unknown-uefi`. This adds the UEFI target to your Rust toolchain.",
+    "linking with cc failed: no such file or directory": "Install linker: sudo pacman -S lld (Arch) or use cross-compilation toolchain. Or add -C link-arg=--subsystem=efi_application to RUSTFLAGS.",
+    "undefined reference to _Unwind_Resume": "Add panic = \"abort\" to both [profile.dev] and [profile.release] in Cargo.toml.",
+    "cannot find crate uefi": "Add uefi = { version = \"0.35\", features = [\"alloc\", \"global_allocator\"] } to [dependencies] in Cargo.toml. Run cargo update then cargo build.",
+    "error[E0463]: can't find crate for core": "The target spec is missing. Run `rustup target add x86_64-unknown-uefi` or use the correct --target flag.",
+    "error: #[panic_handler] not found": "Add a panic handler function with #[panic_handler] attribute. Must have signature fn(info: &PanicInfo) -> !.",
+    "error: no global memory allocator found": "Use uefi features = [\"alloc\", \"global_allocator\"] or implement GlobalAlloc trait manually.",
+    "error: using if let on an Option requires rustc 1.74": "Update Rust: rustup update. Or restructure code to use match instead of if let.",
+    "error: format argument must be a string literal": "In no_std, write! macro requires the format string to be a literal. Use write!(out, \"literal: {}\", value).",
+    "QEMU shows black screen": "Make sure OVMF is installed: pacman -S edk2-ovmf. Use correct path: -bios /usr/share/edk2/x64/OVMF.4m.fd. Ensure the .efi file is correctly placed in the FAT image.",
+    "System boots to shell but keyboard doesn't work": "Check UEFI keyboard input: use uefi::proto::console::text::Key. Make sure input::init() is called. In QEMU, ensure -display gtk or -nographic is set correctly.",
+    "Multiple definitions of _start": "UEFI applications don't need a _start symbol. Use #![no_main] and let the uefi crate's entry point handle it."
+  },
+
+  "package_system": {
+    "Package format": "A package struct can have name, version, description, category, source, entry. Source specifies where to fetch: Builtin, GitHub, or package registry.",
+    "Package database": "A package database manages installed packages with methods: install, remove, find, list. Can include builtin packages from a hardcoded catalog.",
+    "App registry": "An app registry tracks which applications are launchable. register() adds entry point, unregister() removes it, is_registered() checks before launching.",
+    "Catalog system": "A catalog system can return categorized packages. Categories: system, dev, network, media, fun, etc. Provides search and filtering."
+  }
+}

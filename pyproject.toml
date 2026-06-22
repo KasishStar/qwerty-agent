@@ -1,15 +1,15 @@
 [build-system]
 requires = ["setuptools>=64"]
-build-backend = "setuptools.backends._legacy:_Backend"
+build-backend = "setuptools.build_meta"
 
 [project]
 name = "qwerty-agent"
-version = "2.0.0"
+version = "2.0.2"
 description = "Zero-dependency symbolic AI agent. Pure Python stdlib. Runs anywhere."
 readme = "README.md"
 license = {text = "MIT"}
 authors = [
-    {name = "Kasish"}
+    {name = "KasishStar"}
 ]
 requires-python = ">=3.10"
 keywords = ["ai", "agent", "symbolic", "automation", "cli"]
@@ -27,14 +27,16 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/kasish/qwerty"
-Source = "https://github.com/kasish/qwerty"
-Tracker = "https://github.com/kasish/qwerty/issues"
+Homepage = "https://github.com/KasishStar/qwerty-agent"
+Source = "https://github.com/KasishStar/qwerty-agent"
+Tracker = "https://github.com/KasishStar/qwerty-agent/issues"
 
 [project.scripts]
-qwerty = "agent:main"
-qwerty-json = "protocol:main"
-qwerty-interface = "interface:main"
+qwerty = "qwerty_agent.interface:main"
+qwerty-json = "qwerty_agent.protocol:main"
 
 [tool.setuptools.packages.find]
-include = ["*"]
+include = ["qwerty_agent*"]
+
+[tool.setuptools.package-data]
+qwerty_agent = ["*.json", "knowledge/*.json", "workflows/*.json", "memory/*.json"]

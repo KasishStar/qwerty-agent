@@ -1,0 +1,68 @@
+{
+  "physics": {
+    "Newton's Laws": "1st: object stays at rest/motion unless acted upon. 2nd: F=ma (force = mass × acceleration). 3rd: every action has equal and opposite reaction.",
+    "Thermodynamics": "1st: energy conserved. 2nd: entropy always increases (heat flows hot→cold). 3rd: absolute zero (-273.15°C) is unattainable. Laws govern all heat/energy processes.",
+    "Relativity (Special)": "Einstein 1905. Speed of light constant in all frames. E=mc² (mass-energy equivalence). Time dilation: moving clocks tick slower. Length contraction: moving objects shorten.",
+    "Relativity (General)": "Einstein 1915. Gravity = curvature of spacetime by mass. Predicts: black holes, gravitational waves (LIGO 2015 detected), time dilation near massive objects, Mercury's orbital precession.",
+    "Quantum Mechanics": "Particles are probability waves until measured (wavefunction collapse). Uncertainty principle (Δx·Δp ≥ ħ/2): can't know position and momentum simultaneously. Quantized energy levels.",
+    "Electromagnetism": "Maxwell's 4 equations unify electricity and magnetism. Light = electromagnetic wave. Moving charges create magnetic fields, changing magnetic fields create electric fields.",
+    "Standard Model": "Particle physics model. Matter particles: quarks (6 types) + leptons (6 types, including electron). Force carriers: photon (EM), gluons (strong), W/Z bosons (weak), graviton (hypothetical).",
+    "Conservation Laws": "Energy, momentum, angular momentum, electric charge, color charge, baryon number, lepton number. Noether's theorem: every symmetry has a conserved quantity.",
+    "Wave-Particle Duality": "Everything exhibits both wave and particle properties. Photons: double-slit experiment shows interference (wave), photoelectric effect shows particle nature. de Broglie: λ = h/p.",
+    "Nuclear Fusion": "Atomic nuclei combine, releasing energy. Powers stars (hydrogen → helium). Requires extreme temperature/pressure. Tokamaks (ITER) aim for sustained fusion on Earth.",
+    "Nuclear Fission": "Heavy nucleus splits into lighter ones, releasing energy. Chain reaction: neutrons trigger more splits. Used in nuclear power plants and atomic bombs. Critical mass required.",
+    "Entropy": "Measure of disorder. Second law: total entropy of isolated system always increases. Statistical interpretation: more microstates means higher entropy. Low entropy = organized, high entropy = random."
+  },
+  "chemistry": {
+    "Periodic Table": "118 elements organized by atomic number. Periods (rows): electron shells. Groups (columns): similar chemical properties. Metals left, nonmetals right, metalloids in between.",
+    "Chemical Bonds": "Ionic: electron transfer (Na+Cl-). Covalent: electron sharing (H₂O). Metallic: delocalized electrons (metal lattice). Hydrogen bonds: weak, between H and O/N/F.",
+    "States of Matter": "Solid (fixed shape/volume), liquid (fixed volume, variable shape), gas (variable both), plasma (ionized gas, stars). Phase changes: melting, freezing, boiling, condensation, sublimation.",
+    "Acids and Bases": "Acids donate H+ (pH < 7): HCl, H₂SO₄. Bases accept H+ (pH > 7): NaOH, NH₃. Neutral at pH 7. Strong acids/bases fully dissociate. Buffer solutions resist pH change.",
+    "Organic Chemistry": "Carbon-based compounds. Functional groups: alcohols (-OH), carboxylic acids (-COOH), amines (-NH₂). Hydrocarbons: alkanes (single bonds), alkenes (double), alkynes (triple).",
+    "Stoichiometry": "Quantitative relationships in reactions. Balanced equations: 2H₂ + O₂ → 2H₂O. Moles: Avogadro's number (6.022×10²³). Limiting reagent determines product amount.",
+    "Electrochemistry": "Redox reactions: oxidation (lose electrons) + reduction (gain electrons). Batteries convert chemical→electrical. Electrolysis uses electricity to drive non-spontaneous reactions.",
+    "Catalysis": "Substances that speed up reactions without being consumed. Enzymes (biological catalysts). Heterogeneous (different phase) vs homogeneous (same phase). Lower activation energy."
+  },
+  "biology": {
+    "Cell Theory": "All living things composed of cells. Cell is basic unit of life. All cells arise from existing cells. Two types: prokaryotic (no nucleus, bacteria) and eukaryotic (has nucleus, plants/animals/fungi).",
+    "DNA": "Double helix, stores genetic information. Nucleotides: A (adenine) pairs with T (thymine), G (guanine) with C (cytosine). Genes code for proteins via transcription→translation.",
+    "Evolution by Natural Selection": "Darwin 1859. Variation exists in populations. Some traits give survival/reproduction advantage. Advantageous traits become more common over generations. Speciation: accumulation of changes → new species.",
+    "Photosynthesis": "6CO₂ + 6H₂O + light → C₆H₁₂O₆ + 6O₂. Plants convert sunlight to chemical energy. Chloroplasts contain chlorophyll (green pigment). Two phases: light-dependent (ATP/NADPH) and Calvin cycle (fix CO₂).",
+    "Cellular Respiration": "C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O + ATP. Glucose broken down to produce energy (ATP). Stages: glycolysis (cytoplasm), Krebs cycle (mitochondria), electron transport chain (mitochondria).",
+    "Central Dogma": "DNA → RNA → Protein. DNA replicated (cell division). DNA transcribed to mRNA (nucleus). mRNA translated to protein (ribosomes). Reverse transcription (retroviruses like HIV).",
+    "Ecosystems": "Biotic (living) + abiotic (non-living) factors. Food chains: producer → primary consumer → secondary consumer → tertiary consumer. Energy flow: ~10% transfers between trophic levels.",
+    "Human Body Systems": "Nervous (brain, neurons), circulatory (heart, blood vessels), respiratory (lungs, trachea), digestive (stomach, intestines), immune (lymphocytes, antibodies), endocrine (hormones), skeletal, muscular."
+  },
+  "mathematics": {
+    "Algebra": "Study of symbols and rules for manipulating them. Linear equations (ax + b = 0), quadratics (ax² + bx + c = 0 → x = [-b ± √(b²-4ac)]/2a), systems of equations, polynomials.",
+    "Calculus": "Study of change. Derivative (rate of change, slope): d/dx x² = 2x. Integral (area under curve): ∫f(x)dx. Fundamental theorem: differentiation and integration are inverses.",
+    "Linear Algebra": "Study of vector spaces and linear transformations. Vectors, matrices, dot product, eigenvalues/eigenvectors. Used everywhere: ML (data as vectors), graphics (transformation matrices), physics.",
+    "Probability": "Measure of likelihood. P(A) = outcomes favoring A / total outcomes. Conditional: P(A|B) = P(A∩B)/P(B). Bayes' theorem: P(A|B) = P(B|A)P(A)/P(B). Distributions: normal, binomial, Poisson.",
+    "Statistics": "Collecting, analyzing, interpreting data. Mean (average), median (middle), mode (most common). Standard deviation (spread). Hypothesis testing (p-value, confidence intervals). Correlation ≠ causation.",
+    "Number Theory": "Properties of integers. Primes (divisible only by 1 and itself), GCD/LCM, modular arithmetic (clock arithmetic), Fermat's little theorem, RSA encryption based on prime factorization difficulty.",
+    "Graph Theory": "Study of graphs (nodes + edges). Eulerian paths (visit every edge once), Hamiltonian paths (visit every node once). Trees (connected, acyclic). Used in networks, routing, scheduling.",
+    "Set Theory": "Collections of objects. Union (A ∪ B: all in either), intersection (A ∩ B: in both), complement (not in A). Venn diagrams. Cardinality (size). ZFC axioms: foundation of modern mathematics.",
+    "Trigonometry": "Relations between angles and sides of triangles. sin(θ) = opposite/hypotenuse, cos(θ) = adjacent/hypotenuse, tan(θ) = opposite/adjacent. Unit circle. Used in waves, rotation, periodic phenomena."
+  },
+  "computing": {
+    "Turing Machine": "Theoretical model of computation. Infinite tape, read/write head, state machine. Anything computable can be computed by a Turing machine (Church-Turing thesis).",
+    "Boolean Logic": "True/false operations. AND (both true), OR (at least one true), NOT (invert), XOR (exactly one true). De Morgan's laws. Basis of digital circuits and all computing.",
+    "Binary": "Base-2 number system. Bit (0 or 1), Byte (8 bits). Represent everything: integers (two's complement), text (ASCII, Unicode), images (RGB pixels), instructions (CPU opcodes).",
+    "Von Neumann Architecture": "CPU (control unit + ALU) + memory + I/O. Stored-program concept: instructions and data in same memory. Fetch-decode-execute cycle. Bottleneck: memory slower than CPU.",
+    "Time Complexity": "Measure of how runtime grows with input size. O(1) constant, O(log n) logarithmic, O(n) linear, O(n log n) linearithmic, O(n²) quadratic, O(2ⁿ) exponential. Big-O ignores constants and lower terms.",
+    "Compiler vs Interpreter": "Compiler translates entire program to machine code before execution (C, Rust, Go). Interpreter executes line by line (Python, JS, Ruby). JIT compiles hot paths at runtime (Java, C#).",
+    "Operating System": "Manages hardware, processes, memory, files, devices. Kernel (core, privileged), user space (applications). Types: monolithic (Linux), microkernel (Minix), hybrid (Windows NT).",
+    "Virtual Memory": "Each process gets virtual address space (4GB on 32-bit). MMU maps virtual→physical pages. Pages swapped to disk when RAM full. Pros: isolation, overcommit, simplified programming.",
+    "CPU Architecture": "CISC (complex instructions, x86): variable length, many addressing modes. RISC (reduced, ARM): fixed length, load-store architecture. Pipelining: execute multiple instructions in stages.",
+    "Database Index": "Data structure for fast lookups. B-tree: balanced, O(log n) for insert/update/delete. Hash index: O(1) equal lookups, no range queries. Composite index: multiple columns, leftmost prefix rule."
+  },
+  "space": {
+    "Solar System": "Sun (star) + 8 planets: Mercury, Venus, Earth, Mars (terrestrial); Jupiter, Saturn (gas giants); Uranus, Neptune (ice giants). Asteroid belt between Mars and Jupiter. Kuiper belt beyond Neptune.",
+    "Stars": "Fusion-powered balls of plasma. Lifecycle: nebula → protostar → main sequence → red giant → white dwarf/neutron star/black hole (depending on mass). Hertzsprung-Russell diagram: luminosity vs temperature.",
+    "Galaxies": "Gravitationally bound systems of stars, gas, dust, dark matter. Types: spiral (Milky Way, Andromeda), elliptical, irregular. Milky Way: ~100 billion stars, ~100,000 light-years across.",
+    "Black Holes": "Region where gravity prevents anything (even light) from escaping. Event horizon: point of no return. Singularity: infinite density. Types: stellar-mass (few solar masses), supermassive (millions/billions, at galaxy centers).",
+    "Big Bang": "Universe began ~13.8 billion years ago from infinitely hot, dense point. Evidence: cosmic microwave background radiation, Hubble's law (galaxies moving away), element abundances (H, He, Li).",
+    "Dark Matter": "Invisible matter that doesn't interact with EM radiation (no light, no reflection). Detected via gravitational effects: galaxy rotation curves (outer stars move too fast), gravitational lensing. ~27% of universe.",
+    "Dark Energy": "Mysterious force causing universe's expansion to accelerate. ~68% of universe. Einstein's cosmological constant (repulsive gravity). Nature unknown: quintessence? modified gravity? vacuum energy?"
+  }
+}
