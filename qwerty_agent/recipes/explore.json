@@ -1,0 +1,30 @@
+{
+    "name": "explore",
+    "triggers": [
+        "explore", "tell me about", "what is",
+        "explain", "research topic",
+        "investigate", "find information on",
+        "i want to know about", "teach me about"
+    ],
+    "description": "Explore a topic across knowledge, web, and Wikipedia",
+    "steps": [
+        {
+            "tool": "read_knowledge",
+            "description": "Checking local knowledge base",
+            "params": {"query": "{input}"},
+            "critical": false
+        },
+        {
+            "tool": "web_search",
+            "description": "Searching the web",
+            "params": {"query": "{input}"},
+            "critical": false
+        },
+        {
+            "tool": "wikipedia",
+            "description": "Looking up Wikipedia article",
+            "params": {"query": "{input}"},
+            "critical": false
+        }
+    ]
+}

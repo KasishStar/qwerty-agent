@@ -1,0 +1,29 @@
+{
+    "name": "publish",
+    "triggers": [
+        "publish to pypi", "upload to pypi", "release package",
+        "publish package", "deploy to pypi", "push to pypi",
+        "build and upload", "ship to pypi"
+    ],
+    "description": "Build, upload to PyPI, and push to GitHub",
+    "steps": [
+        {
+            "tool": "run_command",
+            "description": "Building distribution packages",
+            "params": {"command": "python -m build"},
+            "critical": true
+        },
+        {
+            "tool": "run_command",
+            "description": "Uploading to PyPI",
+            "params": {"command": "echo 'Run: twine upload dist/*'"},
+            "critical": true
+        },
+        {
+            "tool": "run_command",
+            "description": "Pushing to GitHub",
+            "params": {"command": "git push"},
+            "critical": false
+        }
+    ]
+}

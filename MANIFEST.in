@@ -1,1 +1,5 @@
-recursive-include qwerty_agent *.json
+include qwerty_agent/constitution.json
+recursive-include qwerty_agent/knowledge *.json
+recursive-include qwerty_agent/workflows *.json
+recursive-include qwerty_agent/recipes *.json
+exclude qwerty_agent/memory/*.json

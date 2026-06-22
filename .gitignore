@@ -11,3 +11,7 @@ build/
 .mypy_cache/
 .pytest_cache/
 *.db
+memory/
+qwerty_agent/memory/
+test_qwerty/
+.qwerty_history

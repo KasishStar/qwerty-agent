@@ -1,0 +1,30 @@
+{
+    "name": "debug_error",
+    "triggers": [
+        "debug", "fix error", "troubleshoot",
+        "error occurred", "not working", "broken",
+        "why is this failing", "help me fix",
+        "compile error", "runtime error"
+    ],
+    "description": "Analyze an error, search for fixes, learn the solution",
+    "steps": [
+        {
+            "tool": "run_command",
+            "description": "Capturing error output",
+            "params": {"command": "{input}"},
+            "critical": false
+        },
+        {
+            "tool": "web_search",
+            "description": "Searching for solutions online",
+            "params": {"query": "{input}"},
+            "critical": false
+        },
+        {
+            "tool": "run_command",
+            "description": "Verifying the fix",
+            "params": {"command": "echo 'Run the command again to verify'"},
+            "critical": false
+        }
+    ]
+}

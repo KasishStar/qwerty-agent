@@ -1,0 +1,24 @@
+{
+    "name": "learn_from_web",
+    "triggers": [
+        "learn from web", "research", "find online",
+        "look up and learn", "search and save",
+        "learn about", "teach yourself",
+        "go learn"
+    ],
+    "description": "Search the web, learn results into knowledge base",
+    "steps": [
+        {
+            "tool": "web_and_learn",
+            "description": "Searching the web and storing results",
+            "params": {"query": "{input}", "max_results": 3},
+            "critical": true
+        },
+        {
+            "tool": "read_knowledge",
+            "description": "Checking what was learned",
+            "params": {"query": "{input}"},
+            "critical": false
+        }
+    ]
+}

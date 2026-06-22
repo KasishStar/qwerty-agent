@@ -1603,6 +1603,15 @@ def process(text):
     tone = detect_tone(original)
     workflows = load_workflows()
 
+    # Try multi-step planner first (handles complex tasks with recipes)
+    try:
+        from qwerty_agent.planner import plan_and_execute, explore
+        plan_result = plan_and_execute(original)
+        if plan_result is not None:
+            return plan_result
+    except Exception:
+        pass
+
     # Classify intent
     intent, confidence = classify_intent(input_for_classify)
     entities = extract_entities(original, intent)
@@ -1710,6 +1719,15 @@ def process(text):
             all_results.append(r)
             if result_has_content(r):
                 return f"[Web Research]\n{r['result']}"
+
+    # Final fallback: explore across all sources
+    try:
+        from qwerty_agent.planner import explore
+        explore_result = explore(original)
+        if explore_result:
+            return explore_result
+    except Exception:
+        pass
 
     # Everything failed — detailed diagnostic report
     return layer_report(intent, original, all_results, tone)

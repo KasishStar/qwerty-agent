@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "qwerty-agent"
-version = "2.0.2"
+version = "2.1.0"
 description = "Zero-dependency symbolic AI agent. Pure Python stdlib. Runs anywhere."
 readme = "README.md"
 license = {text = "MIT"}
@@ -39,4 +39,4 @@ qwerty-json = "qwerty_agent.protocol:main"
 include = ["qwerty_agent*"]
 
 [tool.setuptools.package-data]
-qwerty_agent = ["*.json", "knowledge/*.json", "workflows/*.json", "memory/*.json"]
+qwerty_agent = ["*.json", "knowledge/*.json", "workflows/*.json", "recipes/*.json", "memory/*.json"]

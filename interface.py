@@ -86,6 +86,32 @@ def setup_readline():
     readline.parse_and_bind("tab: complete")
 
 # ─── Print helpers ─────────────────────────────────────────────
+def print_plan_start(description):
+    ww = w()
+    print()
+    print(C.MAG + "  ⚙ Planning" + C.RST + C.DIM + f"  {fmt_time()}" + C.RST)
+    print(C.DIM + "  " + "─" * (ww - 4) + C.RST)
+    print("  " + description)
+    print()
+
+def print_step_progress(current, total, description):
+    ww = w()
+    bar_len = ww - 20
+    filled = int(bar_len * current / max(total, 1))
+    bar = C.MAG + "█" * filled + C.DIM + "░" * (bar_len - filled) + C.RST
+    print(C.DIM + f"  Step {current}/{total}:" + C.RST + f" {description}")
+    print("  " + bar)
+
+def print_plan_result(text):
+    ww = w()
+    print(C.MAG + "  ⚙ Plan complete" + C.RST + C.DIM + f"  {fmt_time()}" + C.RST)
+    print(C.DIM + "  " + "─" * (ww - 4) + C.RST)
+    for line in str(text).split("\n"):
+        wrapped = textwrap.fill(line, width=ww - 4)
+        for wl in wrapped.split("\n"):
+            print("  " + wl)
+    print()
+
 def print_user(text):
     ww = w()
     print()
@@ -316,8 +342,14 @@ def main():
     if len(sys.argv) > 1:
         text = " ".join(sys.argv[1:])
         print_banner()
+        print(C.DIM + "  Thinking..." + C.RST)
         result = process(text)
-        print_agent(result)
+        if str(result).startswith("Plan:"):
+            print_plan_result(result)
+        elif str(result).startswith("Explored:"):
+            print_agent(result)
+        else:
+            print_agent(result)
         return
 
     history = load_history()
@@ -352,10 +384,18 @@ def main():
         history.append({"role": "user", "content": text[:200], "timestamp": ts})
         print_user(text)
 
+        print(C.DIM + "  Thinking..." + C.RST, end="\r")
+        sys.stdout.flush()
         result = process(text)
+        print(" " * 20 + "\r", end="")
 
         history.append({"role": "qwerty", "content": str(result)[:500], "timestamp": datetime.now().isoformat()})
-        print_agent(result)
+        if str(result).startswith("Plan:"):
+            print_plan_result(result)
+        elif str(result).startswith("Explored:"):
+            print_agent(result)
+        else:
+            print_agent(result)
 
     save_history(history)
     print(C.DIM + "\n  Goodbye." + C.RST)
