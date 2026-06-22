@@ -28,17 +28,23 @@ Qwerty is an autonomous software agent that reads files, edits code, runs comman
 - **Protocol**: JSON-RPC, MCP server, and CLI modes — plugs into any editor or toolchain
 - **76 passing tests**, zero external dependencies
 
-## Quick Start
+## Install
+
+```bash
+pip install qwerty-agent
+```
+
+Then run:
+
+```bash
+qwerty "what is a kernel"
+```
+
+Or clone from source:
 
 ```bash
 git clone https://github.com/KasishStar/qwerty-agent
 cd qwerty-agent
-python agent.py
-```
-
-Or ask a question directly:
-
-```bash
 python agent.py "what is a kernel"
 ```
 
