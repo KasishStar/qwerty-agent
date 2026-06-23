@@ -1,159 +1,88 @@
-# Qwerty v2 — Zero-Dependency Symbolic AI Agent
+# Qwerty v3 — Tool Agent with Optional LLM Brain
 
-**Pure Python stdlib. No numpy. No torch. No sklearn. 10MB total. Runs on a Raspberry Pi.**
+**Pure Python stdlib. Zero dependencies. Optional AI via Ollama.**
 
-Qwerty is an autonomous software agent that reads files, edits code, runs commands, searches the web, learns from every interaction, and composes multi-source answers — all with **zero external dependencies**. It's a symbolic AI: deterministic, constitution-bound, auditable, and completely offline-capable.
+`pip install qwerty-agent` → `qwerty`
 
-## Why Qwerty?
+## How It Works
 
-| Qwerty | Other AI Agents |
-|---|---|
-| `pip install` → runs | Requires Python ML stack (numpy, torch, transformers, 800MB+) |
-| Offline by default | Cloud API or local LLM (8GB+ RAM) |
-| 10MB on disk | 2-20GB for local models |
-| Constitution hardcoded at engine level | Safety is a prompt (jailbreakable) |
-| Deterministic — same input, same output | Non-deterministic (sampling) |
-| Runs on ARM (Raspberry Pi Zero) | Needs x86 GPU or cloud |
+```
+You → Qwerty TUI
+       │
+       ├── LLM Brain (Ollama) ← if installed
+       │     └── understands you, calls tools, generates response
+       │
+       └── Direct tools ← fallback
+             ├── /web, /wiki, /run, /read, /write
+             ├── /search, /find, /list
+             └── text normalization + fuzzy matching
+```
 
-## Features
+Without Ollama: Qwerty works as a direct tool agent (commands like `/web`, `/run`, `/read`).
+With Ollama: Qwerty becomes an AI agent that understands natural language and decides when to use tools.
 
-- **14 tools**: read, write, edit, search, find, run, web search, wikipedia, learn, analyze errors, and more
-- **Fuzzy NLP**: handles `"runn ls -la"`, `"plz tel me bout the kernul"`, `"idk wat uefi is"` — 50+ shorthand maps, Levenshtein, n-gram Jaccard, contraction expansion, character dedup
-- **Knowledge base**: 8 curated domains + 127 Wikipedia articles covering programming, OS dev, networking, math, physics, chemistry, biology, technology, and general knowledge
-- **Genius composition engine**: retrieves, scores, and assembles multi-sentence responses from 2500+ sentences across all knowledge files
-- **On-demand learning**: `lookup <topic>` → Wikipedia API (free, caches for next time); web fallback → DuckDuckGo
-- **Constitution safety**: 9 hardcoded rules block `rm -rf /`, credential leaks, file overwrites without confirmation, and other dangerous operations
-- **Persistent memory**: every answer, every lookup, every fix is stored in `memory/learned.json` — learning compounds across sessions
-- **Recursive solve loop**: react → think → explore → internet → report — 3 layers of fallback before giving up
-- **Protocol**: JSON-RPC, MCP server, and CLI modes — plugs into any editor or toolchain
-- **76 passing tests**, zero external dependencies
-
-## Install
+## Quick Start
 
 ```bash
 pip install qwerty-agent
+qwerty "explain what a kernel is"
 ```
 
-Then run:
-
+For AI mode:
 ```bash
-qwerty "what is a kernel"
+# Install Ollama: https://ollama.com
+ollama pull qwen2.5:7b
+qwerty
 ```
 
-Or clone from source:
+## Features
 
-```bash
-git clone https://github.com/KasishStar/qwerty-agent
-cd qwerty-agent
-python agent.py "what is a kernel"
-```
+- **12 tools**: read, write, edit, replace, append, list, search, find, run, web search, wikipedia, learn
+- **LLM Brain**: optional Ollama integration — understands natural language, calls tools autonomously
+- **Text normalization**: shorthand expansion, contraction handling, character dedup, fuzzy matching
+- **Constitution safety**: blocks dangerous commands, secrets leaks, unauthorized file overwrites
+- **Persistent memory**: learned facts survive across sessions
+- **Beautiful TUI**: colors, dividers, timestamps, tab completion, command history
+- **No dependencies**: pure Python stdlib — runs on any system with Python 3.10+
 
-## Interactive Mode
+## Commands
 
-```bash
-python agent.py
-```
-
-```
-qwerty> what is UEFI boot
-qwerty> lookup quantum computing
-qwerty> list files
-qwerty> read file agent.py
-qwerty> learn that the answer is 42
-qwerty> exit
-```
-
-## Interface (with history and slash commands)
-
-```bash
-python interface.py
-```
-
-## JSON-RPC Protocol
-
-```bash
-python protocol.py --process "what is a kernel"
-python protocol.py --json "what is a kernel"
-python protocol.py --schema
-python protocol.py --mcp
-```
+| Command | Description |
+|---------|-------------|
+| `/web <query>` | Search the web |
+| `/wiki <topic>` | Look up Wikipedia |
+| `/run <cmd>` | Run shell command |
+| `/read <path>` | Read a file |
+| `/write <path>` | Write a file |
+| `/search <text>` | Search files for text |
+| `/find <pattern>` | Find files by name |
+| `/brain` | Check LLM connection |
+| `/status` | Agent status |
+| `/help` | Show help |
 
 ## Architecture
 
 ```
-User Input → Normalize → Classify Intent → Constitution Check → Execute → Result
-                              ↓
-                    Genius Composition Engine
-                    (2500+ sentences, 8+ domains)
-                              ↓
-                    Recursive Fallback Loop
-                    react → routine → explore → internet → report
-                              ↓
-                    Persistent Memory (learned.json)
+qwerty-agent/
+├── qwerty_agent/
+│   ├── agent.py        # Tool implementations + process()
+│   ├── brain.py        # Ollama LLM connector
+│   ├── interface.py    # TUI (colors, history, tab completion)
+│   ├── protocol.py     # JSON-RPC / MCP server
+│   └── constitution.json  # Safety rules
+├── test_all.py         # 46 tests
+├── pyproject.toml
+└── README.md
 ```
-
-All layers are checked against the constitution before execution. No layer can run `rm -rf /`, overwrite user files without confirmation, or leak credentials.
-
-## How It Works
-
-Qwerty is not an LLM. It's a **symbolic AI** — every decision is deterministic if/then logic. Its "intelligence" comes from:
-
-1. **Broad knowledge** (Wikipedia articles + curated domains)
-2. **Fuzzy pattern matching** (Levenshtein, n-gram Jaccard, keyword overlap)
-3. **Multi-source composition** (Genius scores and assembles sentences)
-4. **On-demand learning** (fetches and stores new knowledge at runtime)
-5. **Compounding memory** (every success is saved for next session)
-
-## What Qwerty Can Do
-
-| Task | Example |
-|---|---|
-| Answer knowledge questions | `"what is a microkernel"` |
-| Read/write files | `"read file agent.py"` |
-| Edit code | `"edit line 10 of test.py to say hello"` |
-| Run commands | `"run cargo build"` |
-| Search code | `"search for TODO in src/"` |
-| Learn new facts | `"learn that X that Y"` |
-| Wikipedia lookup | `"lookup TCP protocol"` |
-| Web search | `"search web for rust uefi tutorial"` |
-| Analyze errors | Automatic on command failure |
-| Remember across sessions | All in `memory/learned.json` |
 
 ## Requirements
 
 - Python 3.10+
 - No pip packages needed
-- Linux, macOS, or Windows
-- ARM (Raspberry Pi) supported
-- Internet optional (for web search and Wikipedia)
-
-## Project Structure
-
-```
-qwerty-agent/
-├── agent.py              # Main engine: constitution, tools, NLP, solve loop
-├── genius.py             # Response composition engine
-├── interface.py          # Interactive REPL with history
-├── protocol.py           # JSON-RPC / MCP / CLI modes
-├── constitution.json     # 9 safety rules
-├── knowledge/            # 9 JSON knowledge files (8 curated + Wikipedia)
-├── memory/               # Persistent learning (auto-generated)
-├── workflows/            # Pre-defined multi-step workflows
-├── knowledge_importer.py # Wikipedia article downloader
-├── test_all.py           # 76 comprehensive tests
-└── pyproject.toml        # Build configuration
-```
+- Ollama (optional) for AI mode
 
 ## Tests
 
 ```bash
 python test_all.py
 ```
-
-## License
-
-MIT — see [LICENSE](LICENSE).
-
----
-
-**Created by KasishStar.** Pure symbolic AI. No ML dependencies. Runs anywhere.

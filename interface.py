@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """
-Qwerty v2 — Terminal User Interface
-Pure Python stdlib. No dependencies. Runs anywhere.
+Qwerty v3 — Terminal User Interface
 """
 
 import os
@@ -10,15 +9,13 @@ import json
 import textwrap
 import shutil
 import readline
-import glob as glob_module
 from datetime import datetime
 
-from agent import process, load_knowledge, recall
+from qwerty_agent.agent import process
 
 HISTORY_FILE = os.path.join(os.path.dirname(__file__), "memory", "history.json")
 HIST_FILE = os.path.join(os.path.dirname(__file__), "memory", ".qwerty_history")
 
-# ─── ANSI helpers ──────────────────────────────────────────────
 class C:
     RST = "\033[0m"
     BLD = "\033[1m"
@@ -29,13 +26,8 @@ class C:
     BLU = "\033[34m"
     MAG = "\033[35m"
     CYN = "\033[36m"
-    WHT = "\033[37m"
-    LRED = "\033[91m"
     LGRN = "\033[92m"
-    LYLW = "\033[93m"
-    LBLU = "\033[94m"
-    LMAG = "\033[95m"
-    LCYN = "\033[96m"
+    LRED = "\033[91m"
 
 def w():
     return shutil.get_terminal_size().columns
@@ -49,7 +41,7 @@ def fmt_time(dt=None):
         dt = datetime.now()
     return dt.strftime("%H:%M")
 
-# ─── Load / Save History ──────────────────────────────────────
+# ─── History ───────────────────────────────────────────────────
 def load_history():
     if os.path.exists(HISTORY_FILE):
         with open(HISTORY_FILE) as f:
@@ -68,50 +60,31 @@ def setup_readline():
     except FileNotFoundError:
         pass
     readline.set_history_length(500)
-
     commands = [
-        "/help", "/know", "/web", "/learn", "/run",
-        "/read", "/write", "/search", "/find",
-        "/status", "/history", "/clear", "/exit",
+        "/help", "/web", "/run", "/read", "/write",
+        "/search", "/find", "/status", "/history",
+        "/clear", "/exit", "/brain",
     ]
-
     def completer(text, state):
         text_lower = text.lower()
         options = [c for c in commands if c.startswith(text_lower)]
         if state < len(options):
             return options[state]
         return None
-
     readline.set_completer(completer)
     readline.parse_and_bind("tab: complete")
 
+# ─── Brain Status ──────────────────────────────────────────────
+def brain_status():
+    try:
+        from qwerty_agent.brain import check, DEFAULT_MODEL
+        if check():
+            return C.LGRN + f"◆ {DEFAULT_MODEL}" + C.RST
+        return C.DIM + "◇ no LLM" + C.RST
+    except Exception:
+        return C.DIM + "◇ no LLM" + C.RST
+
 # ─── Print helpers ─────────────────────────────────────────────
-def print_plan_start(description):
-    ww = w()
-    print()
-    print(C.MAG + "  ⚙ Planning" + C.RST + C.DIM + f"  {fmt_time()}" + C.RST)
-    print(C.DIM + "  " + "─" * (ww - 4) + C.RST)
-    print("  " + description)
-    print()
-
-def print_step_progress(current, total, description):
-    ww = w()
-    bar_len = ww - 20
-    filled = int(bar_len * current / max(total, 1))
-    bar = C.MAG + "█" * filled + C.DIM + "░" * (bar_len - filled) + C.RST
-    print(C.DIM + f"  Step {current}/{total}:" + C.RST + f" {description}")
-    print("  " + bar)
-
-def print_plan_result(text):
-    ww = w()
-    print(C.MAG + "  ⚙ Plan complete" + C.RST + C.DIM + f"  {fmt_time()}" + C.RST)
-    print(C.DIM + "  " + "─" * (ww - 4) + C.RST)
-    for line in str(text).split("\n"):
-        wrapped = textwrap.fill(line, width=ww - 4)
-        for wl in wrapped.split("\n"):
-            print("  " + wl)
-    print()
-
 def print_user(text):
     ww = w()
     print()
@@ -123,7 +96,7 @@ def print_user(text):
             print("  " + wl)
     print()
 
-def print_agent(text, tooltips=None):
+def print_agent(text):
     ww = w()
     print(C.BLU + "  ◇ Qwerty" + C.RST + C.DIM + f"  {fmt_time()}" + C.RST)
     print(C.DIM + "  " + "─" * (ww - 4) + C.RST)
@@ -132,9 +105,6 @@ def print_agent(text, tooltips=None):
         wrapped = textwrap.fill(line, width=ww - 4)
         for wl in wrapped.split("\n"):
             print("  " + wl)
-    if tooltips:
-        print()
-        print(C.DIM + "  " + " ".join(f"[{t}]" for t in tooltips) + C.RST)
     print()
 
 def print_error(text):
@@ -145,8 +115,8 @@ def print_info(text):
 
 # ─── Banner ────────────────────────────────────────────────────
 def print_banner():
-    ww = w()
     os.system("clear" if os.name == "posix" else "cls")
+    ww = w()
     logo = (
         C.CYN
         + "  ██████╗ ██╗    ██╗███████╗██████╗ ████████╗██╗   ██╗\n"
@@ -161,30 +131,25 @@ def print_banner():
     for line in logo.split("\n"):
         print("  " + line)
     print()
-    kw = load_knowledge()
-    entry_count = sum(
-        len(v) if isinstance(v, dict) else 0
-        for v in kw.values()
-    )
-    print(C.DIM + f"  Zero-dependency symbolic AI  ·  {entry_count} knowledge entries")
-    print("  Type " + C.GRN + "/help" + C.RST + C.DIM + " for commands or just ask me anything" + C.RST)
+    print(C.DIM + "  Pure Python tool agent  ·  optional LLM brain via Ollama" + C.RST)
+    print("  " + brain_status() + C.DIM + "  ·  " + C.RST + "Type " + C.GRN + "/help" + C.RST + C.DIM + " for commands" + C.RST)
     print()
 
-# ─── Slash Commands ────────────────────────────────────────────
+# ─── Commands ──────────────────────────────────────────────────
 COMMANDS = {
     "/help": "Show this help",
-    "/know": "Query local knowledge (e.g. /know what is a kernel)",
-    "/web": "Search the web (e.g. /web latest rust news)",
-    "/learn": "Teach Qwerty: /learn <problem> that <solution>",
-    "/run": "Run a shell command (e.g. /run ls -la)",
-    "/read": "Read a file (e.g. /read path/to/file)",
-    "/write": "Write a file (enter content after)",
-    "/search": "Search files for pattern (e.g. /search def main)",
-    "/find": "Find files by name (e.g. /find *.py)",
+    "/web <query>": "Search the web",
+    "/wiki <topic>": "Look up Wikipedia",
+    "/run <cmd>": "Run a shell command",
+    "/read <path>": "Read a file",
+    "/write <path>": "Write a file (enter content after)",
+    "/search <text>": "Search files for text",
+    "/find <pattern>": "Find files by name",
     "/status": "Show agent status",
-    "/history": "Show recent conversation history",
-    "/clear": "Clear the screen",
-    "/exit": "Exit Qwerty",
+    "/brain": "Check LLM status",
+    "/history": "Show recent history",
+    "/clear": "Clear screen",
+    "/exit": "Quit",
 }
 
 def handle_slash(cmd, args, history):
@@ -195,118 +160,38 @@ def handle_slash(cmd, args, history):
         print(C.BLD + "  Commands" + C.RST)
         print(C.DIM + "  " + "─" * (ww - 4) + C.RST)
         for c, desc in COMMANDS.items():
-            print(C.CYN + f"  {c:<10}" + C.RST + C.DIM + " " + desc + C.RST)
+            print(C.CYN + f"  {c:<18}" + C.RST + C.DIM + " " + desc + C.RST)
         print()
-        print(C.DIM + "  You can also ask anything in plain English." + C.RST)
-        print(C.DIM + "  Qwerty will figure out what to do." + C.RST)
+        print(C.DIM + "  For everything else, talk naturally. If Ollama is" + C.RST)
+        print(C.DIM + "  installed, Qwerty uses AI to understand you." + C.RST)
         print()
         return True
 
-    if cmd == "know":
-        if not args:
-            print_info("Usage: /know <query>")
-            return True
-        result = recall(args)
-        if isinstance(result, list):
-            result = str(result[0]) if result else "No knowledge found."
-        print_agent(result, ["knowledge"])
-        return True
-
-    if cmd == "web":
-        if not args:
-            print_info("Usage: /web <query>")
-            return True
-        from agent import tool_web_search
-        print_info("Searching the web...")
-        result = tool_web_search(args)
-        print_agent(result, ["web"])
-        return True
-
-    if cmd == "learn":
-        if not args:
-            print_info("Usage: /learn <problem> that <solution>")
-            return True
-        parts = args.split(" that ", 1)
-        if len(parts) > 1:
-            result = process(f"learn that {parts[0].strip()} that {parts[1].strip()}")
-            print_agent(result, ["learned"])
-        else:
-            print_info("Usage: /learn <problem> that <solution>")
-        return True
-
-    if cmd == "run":
-        if not args:
-            print_info("Usage: /run <command>")
-            return True
-        from agent import tool_run_command
-        print_info("Running...")
-        result = tool_run_command(args)
-        print_agent(result, ["shell"])
-        return True
-
-    if cmd == "read":
-        if not args:
-            print_info("Usage: /read <path>")
-            return True
-        from agent import tool_read_file
-        result = tool_read_file(args)
-        print_agent(result, ["file"])
-        return True
-
-    if cmd == "write":
-        if not args:
-            print_info("Usage: /write <path>")
-            return True
-        from agent import tool_write_file
-        print_info("Enter content (Ctrl+D or '.' on its own line to finish):")
-        lines = []
-        while True:
-            try:
-                line = input()
-                if line == '.':
-                    break
-                lines.append(line)
-            except EOFError:
-                break
-        content = "\n".join(lines)
-        result = tool_write_file(args, content)
-        print_agent(result, ["file"])
-        return True
-
-    if cmd == "search":
-        if not args:
-            print_info("Usage: /search <pattern>")
-            return True
-        from agent import tool_search_files
-        print_info("Searching...")
-        result = tool_search_files(args, ".")
-        print_agent(result, ["search"])
-        return True
-
-    if cmd == "find":
-        if not args:
-            print_info("Usage: /find <pattern>")
-            return True
-        from agent import tool_find_files
-        print_info("Finding...")
-        result = tool_find_files(args, ".")
-        print_agent(result, ["find"])
+    if cmd == "brain":
+        try:
+            from qwerty_agent.brain import check, list_models, DEFAULT_MODEL
+            if check():
+                models = list_models()
+                print(C.LGRN + "  ✓ Brain online" + C.RST)
+                print(f"  Model: {C.CYN}{DEFAULT_MODEL}{C.RST}")
+                print(f"  Available: {', '.join(models[:5])}")
+            else:
+                print(C.YLW + "  ◇ Brain offline" + C.RST)
+                print("  Install Ollama: https://ollama.com")
+                print(f"  Then: ollama pull {DEFAULT_MODEL}")
+        except Exception as e:
+            print_error(str(e))
+        print()
         return True
 
     if cmd == "status":
-        kw = load_knowledge()
-        entry_count = sum(
-            len(v) if isinstance(v, dict) else 0
-            for v in kw.values()
-        )
         print()
-        print(C.BLD + "  Qwerty v2 — Status" + C.RST)
+        print(C.BLD + "  Qwerty v3 — Status" + C.RST)
         print(C.DIM + "  " + "─" * (ww - 4) + C.RST)
-        print(f"  {C.CYN}CWD:{C.RST}        {os.getcwd()}")
-        print(f"  {C.CYN}Knowledge:{C.RST}   {entry_count} entries in {len(kw)} files")
-        print(f"  {C.CYN}History:{C.RST}    {len(history)} messages")
-        print(f"  {C.CYN}Terminal:{C.RST}   {ww}x{shutil.get_terminal_size().lines}")
-        print(f"  {C.CYN}Python:{C.RST}     {sys.version}")
+        print(f"  {C.CYN}Brain:{C.RST}     {brain_status()}")
+        print(f"  {C.CYN}CWD:{C.RST}       {os.getcwd()}")
+        print(f"  {C.CYN}History:{C.RST}   {len(history)} messages")
+        print(f"  {C.CYN}Terminal:{C.RST}  {ww}x{shutil.get_terminal_size().lines}")
         print()
         return True
 
@@ -319,10 +204,9 @@ def handle_slash(cmd, args, history):
             role = entry.get("role", "?")
             content = entry.get("content", "")[:80]
             ts = entry.get("timestamp", "")[:16]
-            if role == "user":
-                print(C.GRN + f"  ▸ [{ts}]" + C.RST + " " + content)
-            else:
-                print(C.BLU + f"  ◇ [{ts}]" + C.RST + " " + content)
+            color = C.GRN if role == "user" else C.BLU
+            icon = "▸" if role == "user" else "◇"
+            print(color + f"  {icon} [{ts}]" + C.RST + " " + content)
         print()
         return True
 
@@ -333,8 +217,9 @@ def handle_slash(cmd, args, history):
     if cmd in ("exit", "quit"):
         return False
 
-    print_error(f"Unknown command: /{cmd}")
-    print_info(f"Type {C.GRN}/help{C.RST} for available commands")
+    # Direct tool commands via process
+    result = process(f"/{cmd} {args}")
+    print_agent(result)
     return True
 
 # ─── Main ──────────────────────────────────────────────────────
@@ -344,12 +229,7 @@ def main():
         print_banner()
         print(C.DIM + "  Thinking..." + C.RST)
         result = process(text)
-        if str(result).startswith("Plan:"):
-            print_plan_result(result)
-        elif str(result).startswith("Explored:"):
-            print_agent(result)
-        else:
-            print_agent(result)
+        print_agent(result)
         return
 
     history = load_history()
@@ -358,6 +238,7 @@ def main():
 
     while True:
         try:
+            bs = brain_status()
             prompt = C.LGRN + "◆" + C.RST + " "
             text = input(prompt).strip()
         except EOFError:
@@ -390,12 +271,7 @@ def main():
         print(" " * 20 + "\r", end="")
 
         history.append({"role": "qwerty", "content": str(result)[:500], "timestamp": datetime.now().isoformat()})
-        if str(result).startswith("Plan:"):
-            print_plan_result(result)
-        elif str(result).startswith("Explored:"):
-            print_agent(result)
-        else:
-            print_agent(result)
+        print_agent(result)
 
     save_history(history)
     print(C.DIM + "\n  Goodbye." + C.RST)
